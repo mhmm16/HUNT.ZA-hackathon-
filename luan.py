@@ -1,6 +1,14 @@
+with open("tldnames.txt", "r") as file:
+    tlds = [l.strip() for l in file]
+
+def isTLD(str):
+    return str in tlds
+
 def validString(str):
     i = 0
     length = len(str)
+    if length == 0:
+        return False
 
     while i < length:
         letter = str[i]
@@ -21,6 +29,9 @@ def validString(str):
 
     return True
 
+def idnConversion(str):
+    domain = str.encode("idna").decode("ascii")
+    return domain
 
 def is_valid(email):
     local, domain = email.split("@")
@@ -29,6 +40,14 @@ def is_valid(email):
         return False
 
     # domain
+    parts = domain.split(".")
+    for i, p in enumerate(parts):
+        if not validString(p):
+            return False
+        
+    if not isTLD(parts[-1].upper()):
+        return False
+
     return True
 
 # domain = email[i:]
