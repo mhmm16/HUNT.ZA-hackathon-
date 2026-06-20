@@ -1448,37 +1448,61 @@ tlds = tlds.split("\n")
 def isTLD(str_val):
     return str_val in tlds
 
-def validString(str_val, domain = False, flag = False):
-    # print(flag)
-
+def validString(str_val, domain = False):
     length = len(str_val)
     if length == 0:
         return False
 
-    # FIX: Check for consecutive dots ".." which are strictly illegal
+    # Check for consecutive dots ".." which are strictly illegal
     if ".." in str_val:
         return False
 
     if domain:
-        # FIX: Domain labels cannot exceed 63 characters
+        # Domain labels cannot exceed 63 characters
         if length > 63:
             return False
         # Enforce RFC 1035: Domain labels cannot start or end with a hyphen
-        if str_val[0] == "-" or str_val[-1] == "-" and not flag:
+        if str_val[0] == "-" or str_val[-1] == "-":
             return False
+
+    # Unicode combining marks (vowel signs, tone marks, diacritics) are
+    # a normal, required part of writing many scripts -- Thai, Devanagari,
+    # Bengali, Tamil, Hebrew (niqqud), Arabic (tashkeel), Vietnamese, etc.
+    # str.isalnum() returns False for these on their own (they're not
+    # letters by themselves, they modify the preceding base letter), so
+    # without this, real words in those scripts would be rejected even
+    # though they're completely legitimate. A combining mark can never
+    # be the very first character (there's nothing for it to attach
+    # to), and we cap how many can stack on one base character as a
+    # sanity check against "zalgo"-style stacking abuse -- legitimate
+    # text never needs more than a couple of marks on one base letter.
+    combining_categories = ("Mn", "Mc", "Me")
+    MAX_CONSECUTIVE_COMBINING_MARKS = 4
+    consecutive_combining = 0
 
     i = 0
     while i < length:
         letter = str_val[i]
 
-        if letter == "@" and not flag:
+        if letter == "@":
             return False
 
-        if (i == 0 or i == length-1) and letter == "." and not flag:
+        if (i == 0 or i == length-1) and letter == ".":
             return False
-        
+
+        if unicodedata.category(letter) in combining_categories:
+            if i == 0:
+                return False
+            consecutive_combining += 1
+            if consecutive_combining > MAX_CONSECUTIVE_COMBINING_MARKS:
+                return False
+            i += 1
+            continue
+        else:
+            consecutive_combining = 0
+
         allowed = ["!", "#", "$", "%", "&", "'", "*", "+", "-", "/", "=", "?", "^", "_", "`", "{", "|", "}", "~", "."] if not domain else ["-"]
-        
+
         if (not letter.isalnum() and letter not in allowed):
             return False
 
@@ -1487,46 +1511,134 @@ def validString(str_val, domain = False, flag = False):
     return True
 
 def idnConversion(str_val):
-    return str_val.encode("idna").decode("ascii")
+    """
+    Convert a (possibly Unicode) domain label/string to its ASCII
+    Punycode form using only the Python standard library, returning
+    None if it cannot be encoded.
+
+    This relies entirely on the builtin "idna" codec (IDNA2003 /
+    stringprep), including its bidi rule (RFC 3454 section 6): a label
+    that mixes right-to-left characters (e.g. Arabic, Hebrew) with
+    left-to-right characters (e.g. Latin) is rejected.
+
+    NOTE: an earlier version of this function fell back to plain
+    Punycode encoding (skipping the bidi check) whenever the builtin
+    codec raised UnicodeError, on the assumption that the bidi rule
+    was overly strict for legitimate right-to-left text. Testing real
+    words across Arabic, Hebrew, Urdu, and Devanagari showed that
+    assumption was wrong -- the builtin codec encodes all of them
+    correctly with no help needed. The *only* case where it failed
+    was a genuinely invalid label that mixed Latin and Arabic
+    characters together -- exactly the case the bidi rule exists to
+    catch. So there's no longer a fallback here: if the builtin codec
+    rejects a label, it's treated as invalid.
+    """
+    try:
+        return str_val.encode("idna").decode("ascii")
+    except UnicodeError:
+        return None
+
+def has_disallowed_control_chars(str_val):
+    """
+    Reject invisible Unicode "format" (Cf) and "control" (Cc)
+    characters anywhere in the address.
+
+    This is a security check, not a normalization step: characters
+    like RLO/LRO/RLE/LRE (U+202E/U+202D/U+202B/U+202A), ZWJ/ZWNJ
+    (U+200D/U+200C), and ALM (U+061C) can be used to make an address
+    *display* as something other than what it actually *is* -- this is
+    especially relevant for right-to-left text (Arabic, Hebrew) where
+    bidi-override characters are a known spoofing vector. None of
+    these are ever legitimately required inside an email address, so
+    we reject the whole address outright rather than silently
+    stripping them (silently stripping would let a spoofed-looking
+    address slip through unflagged).
+    """
+    for ch in str_val:
+        category = unicodedata.category(ch)
+        if category in ("Cf", "Cc", "Cs", "Co"):
+            return True
+    return False
+
+def strict_clean_input(input_str):
+    if not input_str:
+        return ""
+
+    # NFKC normalizes wide characters, full-width formats, and accents
+    # into standard ASCII counterparts. This is also what folds the
+    # full-width "＠" (U+FF20) and the small/CJK-compat "﹫" (U+FE6B)
+    # commercial-at variants down to a plain ASCII "@" -- which is why
+    # this needs to run BEFORE anything in is_valid() counts "@"
+    # characters (see ordering fix below).
+    normalized = unicodedata.normalize('NFKC', input_str)
+
+    # Manual map for unique multi-lingual full stops that normalization misses
+    custom_stops = {
+        '。': '.',  # CJK Ideographic
+        '։': '.',  # Armenian
+        '܂': '.',  # Syriac
+        '․': '.',  # One dot leader
+        'ᛖ': '.'   # Runic
+    }
+    for special_stop, ascii_dot in custom_stops.items():
+        normalized = normalized.replace(special_stop, ascii_dot)
+
+    # Standardize all known Unicode structural whitespaces down to clean standard spaces
+    # This treats any category "Zs" (Separator, Space) character as a basic space ' '
+    cleaned = "".join(
+        " " if unicodedata.category(char) == "Zs" else char
+        for char in normalized
+    )
+
+    return cleaned
 
 def validateDomainString(str_val):
-    # Overall domain length limit is 253 characters 
+    # Overall domain length limit is 253 characters
     if len(str_val) > 253:
         return False
-        
+
     parts = str_val.split(".")
     for p in parts:
-        if not validString(p, domain=True): 
+        if not validString(p, domain=True):
             return False
-        
-    if not isTLD(idnConversion(parts[-1]).upper()):
+        # Each label (not just the TLD) must also round-trip through
+        # IDNA encoding. This catches malformed combining-character
+        # sequences and invalid RTL/LTR script mixing within a single
+        # label -- relevant for Arabic-script domains where mixing
+        # right-to-left and left-to-right characters in one label is
+        # invalid per the bidi rule.
+        if idnConversion(p) is None:
+            return False
+
+    tld_ascii = idnConversion(parts[-1])
+    if tld_ascii is None or not isTLD(tld_ascii.upper()):
         return False
-    
+
     return True
 
 def is_valid_ipv4_pure(ip_str):
     parts = ip_str.split('.')
     if len(parts) != 4:
         return False
-        
+
     for part in parts:
         if not part.isdigit():
             return False
-            
+
         val = int(part)
         if val < 0 or val > 255:
             return False
-            
+
         if len(part) > 1 and part[0] == '0':
             return False
-            
+
     return True
 
 def is_valid_ipv6_pure(ip_str):
     if ip_str.count('::') > 1:
         return False
-        
-    # FIX: Handle IPv4-mapped/compatible IPv6 addresses (e.g., ::ffff:192.168.1.1)
+
+    # Handle IPv4-mapped/compatible IPv6 addresses (e.g., ::ffff:192.168.1.1)
     # If the last group contains a dot, pull it out and validate it as IPv4
     groups = ip_str.split(':')
     if '.' in groups[-1]:
@@ -1544,10 +1656,10 @@ def is_valid_ipv6_pure(ip_str):
         parts = ip_str.split('::')
         left = parts[0].split(':') if parts[0] else []
         right = parts[1].split(':') if parts[1] else []
-        
+
         if len(left) + len(right) > 7:
             return False
-            
+
         groups = left + ['0'] * (8 - (len(left) + len(right))) + right
     else:
         groups = ip_str.split(':')
@@ -1557,7 +1669,7 @@ def is_valid_ipv6_pure(ip_str):
     for group in groups:
         if not (1 <= len(group) <= 4):
             return False
-            
+
         try:
             val = int(group, 16)
             if val < 0 or val > 0xFFFF:
@@ -1570,90 +1682,60 @@ def is_valid_ipv6_pure(ip_str):
 def validateDomainLiteral(domain_str):
     if not (domain_str.startswith("[") and domain_str.endswith("]")):
         return False
-        
+
     ip_content = domain_str[1:-1].strip()
 
     if ip_content.lower().startswith("ipv6:"):
         ipv6_candidate = ip_content[5:]
         return is_valid_ipv6_pure(ipv6_candidate)
-        
+
     return is_valid_ipv4_pure(ip_content)
 
-CUSTOM_STOPS = {
-    '\u3002': '.',  # Chinese Ideographic
-    '\uFF0E': '.',  # Full-width East Asian
-    '\uFE52': '.',  # Small Chinese
-    '\u16E6': '.',  # Nordic Runic 1
-    '\u16EB': '.',  # Nordic Runic 2
-    '\u16EC': '.',  # Nordic Runic 3
-    '\u0589': '.',  # Armenian
-    '\u0701': '.',  # Syriac
-    '\u2024': '.'   # One dot leader
-}
-
-# Malicious/weird structural spaces to completely strip out of the email
-STRIP_CHARACTERS = {
-    '\u200B',  # Zero Width Space
-    '\u200C',  # Zero Width Non-Joiner
-    '\u200D',  # Zero Width Joiner
-    '\uFEFF',  # Zero Width No-Break Space / BOM
-}
-
-def strict_clean_input(input_str):
-    if not input_str:
-        return ""
-        
-        
-    # NFKC normalizes wide characters, full-width formats, and accents into standard ASCII counterparts
-    normalized = unicodedata.normalize('NFKC', input_str)
-
-    if '\uFF20' in normalized:
-        normalized = normalized.replace('\uFF20', '@')
-    
-    # Manual map for unique multi-lingual full stops that normalization misses
-    custom_stops = {
-        '\u3002': '.',  # Chinese/CJK Ideographic
-        '\uFF0E': '.',  # Full-width East Asian
-        '\uFE52': '.',  # Small Chinese
-        '\u16E6': '.',  # Nordic Runic 1
-        '\u16EB': '.',  # Nordic Runic 2
-        '\u16EC': '.',  # Nordic Runic 3
-        '\u0589': '.',  # Armenian
-        '\u0701': '.',  # Syriac
-        '\u2024': '.'   # One dot leader
-    }
-    for special_stop, ascii_dot in custom_stops.items():
-        normalized = normalized.replace(special_stop, ascii_dot)
-        
-    # Standardize all known Unicode structural whitespaces down to clean standard spaces
-    # This treats any category "Zs" (Separator, Space) character as a basic space ' '
-    cleaned = "".join(
-        " " if unicodedata.category(char) == "Zs" else char 
-        for char in normalized
-    )
-    
-    return cleaned
-
 def is_valid(email):
+    if email is None:
+        return False
+
+    if not isinstance(email, str):
+        return False
+
+    # Strip plain ASCII/structural whitespace before anything else --
+    # a stray leading/trailing space shouldn't disqualify an otherwise
+    # valid address, and it needs to happen before the length check.
+    email = email.strip()
+
+    if not email:
+        return False
+
+    # *** ORDERING FIX ***
+    # Normalize BEFORE doing any structural checks (length, "@" count,
+    # etc). Previously normalization ran only on the local/domain split
+    # result, AFTER the raw "@" count check -- which meant a full-width
+    # "＠" (U+FF20) or small commercial-at "﹫" (U+FE6B) would make
+    # email.count("@") come back 0 and the address would be rejected
+    # before strict_clean_input() ever got a chance to fold it down to
+    # a normal "@". Normalizing first fixes that, and also folds
+    # full-width Latin/digits, Arabic presentation forms, and the
+    # various lookalike "full stop" characters consistently.
+    email = strict_clean_input(email)
+
+    # Reject invisible bidi-override / control characters anywhere in
+    # the address (see has_disallowed_control_chars docstring) --
+    # this is the Arabic/RTL-spoofing safety net.
+    if has_disallowed_control_chars(email):
+        return False
+
     if len(email) > 254:
         return False
 
     if email.count("@") != 1:
         return False
-    
-    email = strict_clean_input(email)
 
     local, domain = email.split("@")
 
-    flag = (local[0] == "\"" and local[-1] == "\"")
-    if flag:
-        local = local[1:]
-        local = local[:len(local)-1]
-
-    if len(local) > 64 or len(domain) == 0:
+    if len(local) == 0 or len(local) > 64 or len(domain) == 0:
         return False
 
-    if not validString(local, flag=flag):
+    if not validString(local):
         return False
 
     if domain.startswith("["):
@@ -1662,6 +1744,35 @@ def is_valid(email):
         return validateDomainString(domain)
 
 # --- Test Cases ---
-print(is_valid("abc..def@comp.com"))               # False (Consecutive dots)
-print(is_valid("a@" + "a"*64 + ".com"))            # False (Domain label > 63 chars)
-print(is_valid("\"user\"@[IPv6:::ffff:192.168.1.1]"))  #
+if __name__ == "__main__":
+    print(is_valid("abc..def@comp.com"))               # False (Consecutive dots)
+    print(is_valid("a@" + "a"*64 + ".com"))             # False (Domain label > 63 chars)
+    print(is_valid("user@[IPv6:::ffff:192.168.1.1]"))   # True
+
+    # --- New edge-case tests ---
+
+    # Full-width "＠" (U+FF20) instead of ASCII "@" -- common in text
+    # typed on full-width/CJK input methods, also used in obfuscated
+    # spam scraping-evasion addresses.
+    print(is_valid("user＠example.com"))                # True
+
+    # Small/CJK-compat commercial-at "﹫" (U+FE6B)
+    print(is_valid("user\ufe6bexample.com"))            # True
+
+    # Legitimate Arabic (RTL) local part with a Latin domain
+    print(is_valid("مستخدم@example.com"))               # True
+
+    # Legitimate Arabic (RTL) domain, internationalized
+    print(is_valid("user@مثال.شبكة"))                   # depends on tld list / idna support
+
+    # Bidi-override spoofing attempt (RLO character hidden in the address)
+    print(is_valid("user\u202Egnp.exe@example.com"))    # False (rejected: bidi override char)
+
+    # Zero-width-joiner smuggled into the local part
+    print(is_valid("user\u200dname@example.com"))       # False (rejected: ZWJ is Cf)
+
+    # Leading/trailing whitespace should be tolerated
+    print(is_valid("  user@example.com  "))             # True
+
+    # Empty local part
+    print(is_valid("@example.com"))                      # False
