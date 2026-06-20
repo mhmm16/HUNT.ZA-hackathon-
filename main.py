@@ -1,6 +1,1778 @@
-# main file for function 
-# input is a email
-# return a boolean value 
+# with open("tldnames.txt", "r") as file:
+#     tlds = [l.strip() for l in file]
+
+tlds = """"
+AAA
+AARP
+ABB
+ABBOTT
+ABBVIE
+ABC
+ABLE
+ABOGADO
+ABUDHABI
+AC
+ACADEMY
+ACCENTURE
+ACCOUNTANT
+ACCOUNTANTS
+ACO
+ACTOR
+AD
+ADS
+ADULT
+AE
+AEG
+AERO
+AETNA
+AF
+AFL
+AFRICA
+AG
+AGAKHAN
+AGENCY
+AI
+AIG
+AIRBUS
+AIRFORCE
+AIRTEL
+AKDN
+AL
+ALIBABA
+ALIPAY
+ALLFINANZ
+ALLSTATE
+ALLY
+ALSACE
+ALSTOM
+AM
+AMAZON
+AMERICANEXPRESS
+AMERICANFAMILY
+AMEX
+AMFAM
+AMICA
+AMSTERDAM
+ANALYTICS
+ANDROID
+ANQUAN
+ANZ
+AO
+AOL
+APARTMENTS
+APP
+APPLE
+AQ
+AQUARELLE
+AR
+ARAB
+ARAMCO
+ARCHI
+ARMY
+ARPA
+ART
+ARTE
+AS
+ASDA
+ASIA
+ASSOCIATES
+AT
+ATHLETA
+ATTORNEY
+AU
+AUCTION
+AUDI
+AUDIBLE
+AUDIO
+AUSPOST
+AUTHOR
+AUTO
+AUTOS
+AW
+AWS
+AX
+AXA
+AZ
+AZURE
+BA
+BABY
+BAIDU
+BANAMEX
+BAND
+BANK
+BAR
+BARCELONA
+BARCLAYCARD
+BARCLAYS
+BAREFOOT
+BARGAINS
+BASEBALL
+BASKETBALL
+BAUHAUS
+BAYERN
+BB
+BBC
+BBT
+BBVA
+BCG
+BCN
+BD
+BE
+BEATS
+BEAUTY
+BEER
+BERLIN
+BEST
+BESTBUY
+BET
+BF
+BG
+BH
+BHARTI
+BI
+BIBLE
+BID
+BIKE
+BING
+BINGO
+BIO
+BIZ
+BJ
+BLACK
+BLACKFRIDAY
+BLOCKBUSTER
+BLOG
+BLOOMBERG
+BLUE
+BM
+BMS
+BMW
+BN
+BNPPARIBAS
+BO
+BOATS
+BOEHRINGER
+BOFA
+BOM
+BOND
+BOO
+BOOK
+BOOKING
+BOSCH
+BOSTIK
+BOSTON
+BOT
+BOUTIQUE
+BOX
+BR
+BRADESCO
+BRIDGESTONE
+BROADWAY
+BROKER
+BROTHER
+BRUSSELS
+BS
+BT
+BUILD
+BUILDERS
+BUSINESS
+BUY
+BUZZ
+BV
+BW
+BY
+BZ
+BZH
+CA
+CAB
+CAFE
+CAL
+CALL
+CALVINKLEIN
+CAM
+CAMERA
+CAMP
+CANON
+CAPETOWN
+CAPITAL
+CAPITALONE
+CAR
+CARAVAN
+CARDS
+CARE
+CAREER
+CAREERS
+CARS
+CASA
+CASE
+CASH
+CASINO
+CAT
+CATERING
+CATHOLIC
+CBA
+CBN
+CBRE
+CC
+CD
+CENTER
+CEO
+CERN
+CF
+CFA
+CFD
+CG
+CH
+CHANEL
+CHANNEL
+CHARITY
+CHASE
+CHAT
+CHEAP
+CHINTAI
+CHRISTMAS
+CHROME
+CHURCH
+CI
+CIPRIANI
+CIRCLE
+CISCO
+CITADEL
+CITI
+CITIC
+CITY
+CK
+CL
+CLAIMS
+CLEANING
+CLICK
+CLINIC
+CLINIQUE
+CLOTHING
+CLOUD
+CLUB
+CLUBMED
+CM
+CN
+CO
+COACH
+CODES
+COFFEE
+COLLEGE
+COLOGNE
+COM
+COMMBANK
+COMMUNITY
+COMPANY
+COMPARE
+COMPUTER
+COMSEC
+CONDOS
+CONSTRUCTION
+CONSULTING
+CONTACT
+CONTRACTORS
+COOKING
+COOL
+COOP
+CORSICA
+COUNTRY
+COUPON
+COUPONS
+COURSES
+CPA
+CR
+CREDIT
+CREDITCARD
+CREDITUNION
+CRICKET
+CROWN
+CRS
+CRUISE
+CRUISES
+CU
+CUISINELLA
+CV
+CW
+CX
+CY
+CYMRU
+CYOU
+CZ
+DAD
+DANCE
+DATA
+DATE
+DATING
+DATSUN
+DAY
+DCLK
+DDS
+DE
+DEAL
+DEALER
+DEALS
+DEGREE
+DELIVERY
+DELL
+DELOITTE
+DELTA
+DEMOCRAT
+DENTAL
+DENTIST
+DESI
+DESIGN
+DEV
+DHL
+DIAMONDS
+DIET
+DIGITAL
+DIRECT
+DIRECTORY
+DISCOUNT
+DISCOVER
+DISH
+DIY
+DJ
+DK
+DM
+DNP
+DO
+DOCS
+DOCTOR
+DOG
+DOMAINS
+DOT
+DOWNLOAD
+DRIVE
+DTV
+DUBAI
+DUPONT
+DURBAN
+DVAG
+DVR
+DZ
+EARTH
+EAT
+EC
+ECO
+EDEKA
+EDU
+EDUCATION
+EE
+EG
+EMAIL
+EMERCK
+ENERGY
+ENGINEER
+ENGINEERING
+ENTERPRISES
+EPSON
+EQUIPMENT
+ER
+ERICSSON
+ERNI
+ES
+ESQ
+ESTATE
+ET
+EU
+EUROVISION
+EUS
+EVENTS
+EXCHANGE
+EXPERT
+EXPOSED
+EXPRESS
+EXTRASPACE
+FAGE
+FAIL
+FAIRWINDS
+FAITH
+FAMILY
+FAN
+FANS
+FARM
+FARMERS
+FASHION
+FAST
+FEDEX
+FEEDBACK
+FERRARI
+FERRERO
+FI
+FIDELITY
+FIDO
+FILM
+FINAL
+FINANCE
+FINANCIAL
+FIRE
+FIRESTONE
+FIRMDALE
+FISH
+FISHING
+FIT
+FITNESS
+FJ
+FK
+FLICKR
+FLIGHTS
+FLIR
+FLORIST
+FLOWERS
+FLY
+FM
+FO
+FOO
+FOOD
+FOOTBALL
+FORD
+FOREX
+FORSALE
+FORUM
+FOUNDATION
+FOX
+FR
+FREE
+FRESENIUS
+FRL
+FROGANS
+FRONTIER
+FTR
+FUJITSU
+FUN
+FUND
+FURNITURE
+FUTBOL
+FYI
+GA
+GAL
+GALLERY
+GALLO
+GALLUP
+GAME
+GAMES
+GAP
+GARDEN
+GAY
+GB
+GBIZ
+GD
+GDN
+GE
+GEA
+GENT
+GENTING
+GEORGE
+GF
+GG
+GGEE
+GH
+GI
+GIFT
+GIFTS
+GIVES
+GIVING
+GL
+GLASS
+GLE
+GLOBAL
+GLOBO
+GM
+GMAIL
+GMBH
+GMO
+GMX
+GN
+GODADDY
+GOLD
+GOLDPOINT
+GOLF
+GOODYEAR
+GOOG
+GOOGLE
+GOP
+GOT
+GOV
+GP
+GQ
+GR
+GRAINGER
+GRAPHICS
+GRATIS
+GREEN
+GRIPE
+GROCERY
+GROUP
+GS
+GT
+GU
+GUCCI
+GUGE
+GUIDE
+GUITARS
+GURU
+GW
+GY
+HAIR
+HAMBURG
+HANGOUT
+HAUS
+HBO
+HDFC
+HDFCBANK
+HEALTH
+HEALTHCARE
+HELP
+HELSINKI
+HERE
+HERMES
+HIPHOP
+HISAMITSU
+HITACHI
+HIV
+HK
+HKT
+HM
+HN
+HOCKEY
+HOLDINGS
+HOLIDAY
+HOMEDEPOT
+HOMEGOODS
+HOMES
+HOMESENSE
+HONDA
+HORSE
+HOSPITAL
+HOST
+HOSTING
+HOT
+HOTELS
+HOTMAIL
+HOUSE
+HOW
+HR
+HSBC
+HT
+HU
+HUGHES
+HYATT
+HYUNDAI
+IBM
+ICBC
+ICE
+ICU
+ID
+IE
+IEEE
+IFM
+IKANO
+IL
+IM
+IMAMAT
+IMDB
+IMMO
+IMMOBILIEN
+IN
+INC
+INDUSTRIES
+INFINITI
+INFO
+ING
+INK
+INSTITUTE
+INSURANCE
+INSURE
+INT
+INTERNATIONAL
+INTUIT
+INVESTMENTS
+IO
+IPIRANGA
+IQ
+IR
+IRISH
+IS
+ISMAILI
+IST
+ISTANBUL
+IT
+ITAU
+ITV
+JAGUAR
+JAVA
+JCB
+JE
+JEEP
+JETZT
+JEWELRY
+JIO
+JLL
+JM
+JMP
+JNJ
+JO
+JOBS
+JOBURG
+JOT
+JOY
+JP
+JPMORGAN
+JPRS
+JUEGOS
+JUNIPER
+KAUFEN
+KDDI
+KE
+KERRYHOTELS
+KERRYPROPERTIES
+KFH
+KG
+KH
+KI
+KIA
+KIDS
+KIM
+KINDLE
+KITCHEN
+KIWI
+KM
+KN
+KOELN
+KOMATSU
+KOSHER
+KP
+KPMG
+KPN
+KR
+KRD
+KRED
+KUOKGROUP
+KW
+KY
+KYOTO
+KZ
+LA
+LACAIXA
+LAMBORGHINI
+LAMER
+LAND
+LANDROVER
+LANXESS
+LASALLE
+LAT
+LATINO
+LATROBE
+LAW
+LAWYER
+LB
+LC
+LDS
+LEASE
+LECLERC
+LEFRAK
+LEGAL
+LEGO
+LEXUS
+LGBT
+LI
+LIDL
+LIFE
+LIFEINSURANCE
+LIFESTYLE
+LIGHTING
+LIKE
+LILLY
+LIMITED
+LIMO
+LINCOLN
+LINK
+LIVE
+LIVING
+LK
+LLC
+LLP
+LOAN
+LOANS
+LOCKER
+LOCUS
+LOL
+LONDON
+LOTTE
+LOTTO
+LOVE
+LPL
+LPLFINANCIAL
+LR
+LS
+LT
+LTD
+LTDA
+LU
+LUNDBECK
+LUXE
+LUXURY
+LV
+LY
+MA
+MADRID
+MAIF
+MAISON
+MAKEUP
+MAN
+MANAGEMENT
+MANGO
+MAP
+MARKET
+MARKETING
+MARKETS
+MARRIOTT
+MARSHALLS
+MATTEL
+MBA
+MC
+MCKINSEY
+MD
+ME
+MED
+MEDIA
+MEET
+MELBOURNE
+MEME
+MEMORIAL
+MEN
+MENU
+MERCK
+MERCKMSD
+MG
+MH
+MIAMI
+MICROSOFT
+MIL
+MINI
+MINT
+MIT
+MITSUBISHI
+MK
+ML
+MLB
+MLS
+MM
+MMA
+MN
+MO
+MOBI
+MOBILE
+MODA
+MOE
+MOI
+MOM
+MONASH
+MONEY
+MONSTER
+MORMON
+MORTGAGE
+MOSCOW
+MOTO
+MOTORCYCLES
+MOV
+MOVIE
+MP
+MQ
+MR
+MS
+MSD
+MT
+MTN
+MTR
+MU
+MUSEUM
+MUSIC
+MV
+MW
+MX
+MY
+MZ
+NA
+NAB
+NAGOYA
+NAME
+NAVY
+NBA
+NC
+NE
+NEC
+NET
+NETBANK
+NETFLIX
+NETWORK
+NEUSTAR
+NEW
+NEWS
+NEXT
+NEXTDIRECT
+NEXUS
+NF
+NFL
+NG
+NGO
+NHK
+NI
+NICO
+NIKE
+NIKON
+NINJA
+NISSAN
+NISSAY
+NL
+NO
+NOKIA
+NORTON
+NOW
+NOWRUZ
+NOWTV
+NP
+NR
+NRA
+NRW
+NTT
+NU
+NYC
+NZ
+OBI
+OBSERVER
+OFFICE
+OKINAWA
+OLAYAN
+OLAYANGROUP
+OLLO
+OM
+OMEGA
+ONE
+ONG
+ONL
+ONLINE
+OOO
+OPEN
+ORACLE
+ORANGE
+ORG
+ORGANIC
+ORIGINS
+OSAKA
+OTSUKA
+OTT
+OVH
+PA
+PAGE
+PANASONIC
+PARIS
+PARS
+PARTNERS
+PARTS
+PARTY
+PAY
+PCCW
+PE
+PET
+PF
+PFIZER
+PG
+PH
+PHARMACY
+PHD
+PHILIPS
+PHONE
+PHOTO
+PHOTOGRAPHY
+PHOTOS
+PHYSIO
+PICS
+PICTET
+PICTURES
+PID
+PIN
+PING
+PINK
+PIONEER
+PIZZA
+PK
+PL
+PLACE
+PLAY
+PLAYSTATION
+PLUMBING
+PLUS
+PM
+PN
+PNC
+POHL
+POKER
+POLITIE
+PORN
+POST
+PR
+PRAXI
+PRESS
+PRIME
+PRO
+PROD
+PRODUCTIONS
+PROF
+PROGRESSIVE
+PROMO
+PROPERTIES
+PROPERTY
+PROTECTION
+PRU
+PRUDENTIAL
+PS
+PT
+PUB
+PW
+PWC
+PY
+QA
+QPON
+QUEBEC
+QUEST
+RACING
+RADIO
+RE
+READ
+REALESTATE
+REALTOR
+REALTY
+RECIPES
+RED
+REDUMBRELLA
+REHAB
+REISE
+REISEN
+REIT
+RELIANCE
+REN
+RENT
+RENTALS
+REPAIR
+REPORT
+REPUBLICAN
+REST
+RESTAURANT
+REVIEW
+REVIEWS
+REXROTH
+RICH
+RICHARDLI
+RICOH
+RIL
+RIO
+RIP
+RO
+ROCKS
+RODEO
+ROGERS
+ROOM
+RS
+RSVP
+RU
+RUGBY
+RUHR
+RUN
+RW
+RWE
+RYUKYU
+SA
+SAARLAND
+SAFE
+SAFETY
+SAKURA
+SALE
+SALON
+SAMSCLUB
+SAMSUNG
+SANDVIK
+SANDVIKCOROMANT
+SANOFI
+SAP
+SARL
+SAS
+SAVE
+SAXO
+SB
+SBI
+SBS
+SC
+SCB
+SCHAEFFLER
+SCHMIDT
+SCHOLARSHIPS
+SCHOOL
+SCHULE
+SCHWARZ
+SCIENCE
+SCOT
+SD
+SE
+SEARCH
+SEAT
+SECURE
+SECURITY
+SEEK
+SELECT
+SENER
+SERVICES
+SEVEN
+SEW
+SEX
+SEXY
+SFR
+SG
+SH
+SHANGRILA
+SHARP
+SHELL
+SHIA
+SHIKSHA
+SHOES
+SHOP
+SHOPPING
+SHOUJI
+SHOW
+SI
+SILK
+SINA
+SINGLES
+SITE
+SJ
+SK
+SKI
+SKIN
+SKY
+SKYPE
+SL
+SLING
+SM
+SMART
+SMILE
+SN
+SNCF
+SO
+SOCCER
+SOCIAL
+SOFTBANK
+SOFTWARE
+SOHU
+SOLAR
+SOLUTIONS
+SONG
+SONY
+SOY
+SPA
+SPACE
+SPORT
+SPOT
+SR
+SRL
+SS
+ST
+STADA
+STAPLES
+STAR
+STATEBANK
+STATEFARM
+STC
+STCGROUP
+STOCKHOLM
+STORAGE
+STORE
+STREAM
+STUDIO
+STUDY
+STYLE
+SU
+SUCKS
+SUPPLIES
+SUPPLY
+SUPPORT
+SURF
+SURGERY
+SUZUKI
+SV
+SWATCH
+SWISS
+SX
+SY
+SYDNEY
+SYSTEMS
+SZ
+TAB
+TAIPEI
+TALK
+TAOBAO
+TARGET
+TATAMOTORS
+TATAR
+TATTOO
+TAX
+TAXI
+TC
+TCI
+TD
+TDK
+TEAM
+TECH
+TECHNOLOGY
+TEL
+TEMASEK
+TENNIS
+TEVA
+TF
+TG
+TH
+THD
+THEATER
+THEATRE
+TIAA
+TICKETS
+TIENDA
+TIPS
+TIRES
+TIROL
+TJ
+TJMAXX
+TJX
+TK
+TKMAXX
+TL
+TM
+TMALL
+TN
+TO
+TODAY
+TOKYO
+TOOLS
+TOP
+TORAY
+TOSHIBA
+TOTAL
+TOURS
+TOWN
+TOYOTA
+TOYS
+TR
+TRADE
+TRADING
+TRAINING
+TRAVEL
+TRAVELERS
+TRAVELERSINSURANCE
+TRUST
+TRV
+TT
+TUBE
+TUI
+TUNES
+TUSHU
+TV
+TVS
+TW
+TZ
+UA
+UBANK
+UBS
+UG
+UK
+UNICOM
+UNIVERSITY
+UNO
+UOL
+UPS
+US
+UY
+UZ
+VA
+VACATIONS
+VANA
+VANGUARD
+VC
+VE
+VEGAS
+VENTURES
+VERISIGN
+VERSICHERUNG
+VET
+VG
+VI
+VIAJES
+VIDEO
+VIG
+VIKING
+VILLAS
+VIN
+VIP
+VIRGIN
+VISA
+VISION
+VIVA
+VIVO
+VLAANDEREN
+VN
+VODKA
+VOLVO
+VOTE
+VOTING
+VOTO
+VOYAGE
+VU
+WALES
+WALMART
+WALTER
+WANG
+WANGGOU
+WATCH
+WATCHES
+WEATHER
+WEATHERCHANNEL
+WEBCAM
+WEBER
+WEBSITE
+WED
+WEDDING
+WEIBO
+WEIR
+WF
+WHOSWHO
+WIEN
+WIKI
+WILLIAMHILL
+WIN
+WINDOWS
+WINE
+WINNERS
+WME
+WOODSIDE
+WORK
+WORKS
+WORLD
+WOW
+WS
+WTC
+WTF
+XBOX
+XEROX
+XIHUAN
+XIN
+XN--11B4C3D
+XN--1CK2E1B
+XN--1QQW23A
+XN--2SCRJ9C
+XN--30RR7Y
+XN--3BST00M
+XN--3DS443G
+XN--3E0B707E
+XN--3HCRJ9C
+XN--3PXU8K
+XN--42C2D9A
+XN--45BR5CYL
+XN--45BRJ9C
+XN--45Q11C
+XN--4DBRK0CE
+XN--4GBRIM
+XN--54B7FTA0CC
+XN--55QW42G
+XN--55QX5D
+XN--5SU34J936BGSG
+XN--5TZM5G
+XN--6FRZ82G
+XN--6QQ986B3XL
+XN--80ADXHKS
+XN--80AO21A
+XN--80AQECDR1A
+XN--80ASEHDB
+XN--80ASWG
+XN--8Y0A063A
+XN--90A3AC
+XN--90AE
+XN--90AIS
+XN--9DBQ2A
+XN--9ET52U
+XN--9KRT00A
+XN--B4W605FERD
+XN--BCK1B9A5DRE4C
+XN--C1AVG
+XN--C2BR7G
+XN--CCK2B3B
+XN--CCKWCXETD
+XN--CG4BKI
+XN--CLCHC0EA0B2G2A9GCD
+XN--CZR694B
+XN--CZRS0T
+XN--CZRU2D
+XN--D1ACJ3B
+XN--D1ALF
+XN--E1A4C
+XN--ECKVDTC9D
+XN--EFVY88H
+XN--FCT429K
+XN--FHBEI
+XN--FIQ228C5HS
+XN--FIQ64B
+XN--FIQS8S
+XN--FIQZ9S
+XN--FJQ720A
+XN--FLW351E
+XN--FPCRJ9C3D
+XN--FZC2C9E2C
+XN--FZYS8D69UVGM
+XN--G2XX48C
+XN--GCKR3F0F
+XN--GECRJ9C
+XN--GK3AT1E
+XN--H2BREG3EVE
+XN--H2BRJ9C
+XN--H2BRJ9C8C
+XN--HXT814E
+XN--I1B6B1A6A2E
+XN--IMR513N
+XN--IO0A7I
+XN--J1AEF
+XN--J1AMH
+XN--J6W193G
+XN--JLQ480N2RG
+XN--JVR189M
+XN--KCRX77D1X4A
+XN--KPRW13D
+XN--KPRY57D
+XN--KPUT3I
+XN--L1ACC
+XN--LGBBAT1AD8J
+XN--MGB9AWBF
+XN--MGBA3A3EJT
+XN--MGBA3A4F16A
+XN--MGBA7C0BBN0A
+XN--MGBAAM7A8H
+XN--MGBAB2BD
+XN--MGBAH1A3HJKRD
+XN--MGBAI9AZGQP6J
+XN--MGBAYH7GPA
+XN--MGBBH1A
+XN--MGBBH1A71E
+XN--MGBC0A9AZCG
+XN--MGBCA7DZDO
+XN--MGBCPQ6GPA1A
+XN--MGBERP4A5D4AR
+XN--MGBGU82A
+XN--MGBI4ECEXP
+XN--MGBPL2FH
+XN--MGBT3DHD
+XN--MGBTX2B
+XN--MGBX4CD0AB
+XN--MIX891F
+XN--MK1BU44C
+XN--MXTQ1M
+XN--NGBC5AZD
+XN--NGBE9E0A
+XN--NGBRX
+XN--NODE
+XN--NQV7F
+XN--NQV7FS00EMA
+XN--NYQY26A
+XN--O3CW4H
+XN--OGBPF8FL
+XN--OTU796D
+XN--P1ACF
+XN--P1AI
+XN--PGBS0DH
+XN--PSSY2U
+XN--Q7CE6A
+XN--Q9JYB4C
+XN--QCKA1PMC
+XN--QXA6A
+XN--QXAM
+XN--RHQV96G
+XN--ROVU88B
+XN--RVC1E0AM3E
+XN--S9BRJ9C
+XN--SES554G
+XN--T60B56A
+XN--TCKWE
+XN--TIQ49XQYJ
+XN--UNUP4Y
+XN--VERMGENSBERATER-CTB
+XN--VERMGENSBERATUNG-PWB
+XN--VHQUV
+XN--VUQ861B
+XN--W4R85EL8FHU5DNRA
+XN--W4RS40L
+XN--WGBH1C
+XN--WGBL6A
+XN--XHQ521B
+XN--XKC2AL3HYE2A
+XN--XKC2DL3A5EE0H
+XN--Y9A3AQ
+XN--YFRO4I67O
+XN--YGBI2AMMX
+XN--ZFR164B
+XXX
+XYZ
+YACHTS
+YAHOO
+YAMAXUN
+YANDEX
+YE
+YODOBASHI
+YOGA
+YOKOHAMA
+YOU
+YOUTUBE
+YT
+YUN
+ZA
+ZAPPOS
+ZARA
+ZERO
+ZIP
+ZM
+ZONE
+ZUERICH
+ZW
+"""
+
+import unicodedata
+
+tlds = tlds.split("\n")
+
+def isTLD(str_val):
+    return str_val in tlds
+
+def validString(str_val, domain = False):
+    length = len(str_val)
+    if length == 0:
+        return False
+
+    # Check for consecutive dots ".." which are strictly illegal
+    if ".." in str_val:
+        return False
+
+    if domain:
+        # Domain labels cannot exceed 63 characters
+        if length > 63:
+            return False
+        # Enforce RFC 1035: Domain labels cannot start or end with a hyphen
+        if str_val[0] == "-" or str_val[-1] == "-":
+            return False
+
+    # Unicode combining marks (vowel signs, tone marks, diacritics) are
+    # a normal, required part of writing many scripts -- Thai, Devanagari,
+    # Bengali, Tamil, Hebrew (niqqud), Arabic (tashkeel), Vietnamese, etc.
+    # str.isalnum() returns False for these on their own (they're not
+    # letters by themselves, they modify the preceding base letter), so
+    # without this, real words in those scripts would be rejected even
+    # though they're completely legitimate. A combining mark can never
+    # be the very first character (there's nothing for it to attach
+    # to), and we cap how many can stack on one base character as a
+    # sanity check against "zalgo"-style stacking abuse -- legitimate
+    # text never needs more than a couple of marks on one base letter.
+    combining_categories = ("Mn", "Mc", "Me")
+    MAX_CONSECUTIVE_COMBINING_MARKS = 4
+    consecutive_combining = 0
+
+    i = 0
+    while i < length:
+        letter = str_val[i]
+
+        if letter == "@":
+            return False
+
+        if (i == 0 or i == length-1) and letter == ".":
+            return False
+
+        if unicodedata.category(letter) in combining_categories:
+            if i == 0:
+                return False
+            consecutive_combining += 1
+            if consecutive_combining > MAX_CONSECUTIVE_COMBINING_MARKS:
+                return False
+            i += 1
+            continue
+        else:
+            consecutive_combining = 0
+
+        allowed = ["!", "#", "$", "%", "&", "'", "*", "+", "-", "/", "=", "?", "^", "_", "`", "{", "|", "}", "~", "."] if not domain else ["-"]
+
+        if (not letter.isalnum() and letter not in allowed):
+            return False
+
+        i += 1
+
+    return True
+
+def idnConversion(str_val):
+    """
+    Convert a (possibly Unicode) domain label/string to its ASCII
+    Punycode form using only the Python standard library, returning
+    None if it cannot be encoded.
+
+    This relies entirely on the builtin "idna" codec (IDNA2003 /
+    stringprep), including its bidi rule (RFC 3454 section 6): a label
+    that mixes right-to-left characters (e.g. Arabic, Hebrew) with
+    left-to-right characters (e.g. Latin) is rejected.
+
+    NOTE: an earlier version of this function fell back to plain
+    Punycode encoding (skipping the bidi check) whenever the builtin
+    codec raised UnicodeError, on the assumption that the bidi rule
+    was overly strict for legitimate right-to-left text. Testing real
+    words across Arabic, Hebrew, Urdu, and Devanagari showed that
+    assumption was wrong -- the builtin codec encodes all of them
+    correctly with no help needed. The *only* case where it failed
+    was a genuinely invalid label that mixed Latin and Arabic
+    characters together -- exactly the case the bidi rule exists to
+    catch. So there's no longer a fallback here: if the builtin codec
+    rejects a label, it's treated as invalid.
+    """
+    try:
+        return str_val.encode("idna").decode("ascii")
+    except UnicodeError:
+        return None
+
+def has_disallowed_control_chars(str_val):
+    """
+    Reject invisible Unicode "format" (Cf) and "control" (Cc)
+    characters anywhere in the address.
+
+    This is a security check, not a normalization step: characters
+    like RLO/LRO/RLE/LRE (U+202E/U+202D/U+202B/U+202A), ZWJ/ZWNJ
+    (U+200D/U+200C), and ALM (U+061C) can be used to make an address
+    *display* as something other than what it actually *is* -- this is
+    especially relevant for right-to-left text (Arabic, Hebrew) where
+    bidi-override characters are a known spoofing vector. None of
+    these are ever legitimately required inside an email address, so
+    we reject the whole address outright rather than silently
+    stripping them (silently stripping would let a spoofed-looking
+    address slip through unflagged).
+    """
+    for ch in str_val:
+        category = unicodedata.category(ch)
+        if category in ("Cf", "Cc", "Cs", "Co"):
+            return True
+    return False
+
+def strict_clean_input(input_str):
+    if not input_str:
+        return ""
+
+    # NFKC normalizes wide characters, full-width formats, and accents
+    # into standard ASCII counterparts. This is also what folds the
+    # full-width "＠" (U+FF20) and the small/CJK-compat "﹫" (U+FE6B)
+    # commercial-at variants down to a plain ASCII "@" -- which is why
+    # this needs to run BEFORE anything in is_valid() counts "@"
+    # characters (see ordering fix below).
+    normalized = unicodedata.normalize('NFKC', input_str)
+
+    # Manual map for unique multi-lingual full stops that normalization misses
+    custom_stops = {
+        '。': '.',  # CJK Ideographic
+        '։': '.',  # Armenian
+        '܂': '.',  # Syriac
+        '․': '.',  # One dot leader
+        'ᛖ': '.'   # Runic
+    }
+    for special_stop, ascii_dot in custom_stops.items():
+        normalized = normalized.replace(special_stop, ascii_dot)
+
+    # Standardize all known Unicode structural whitespaces down to clean standard spaces
+    # This treats any category "Zs" (Separator, Space) character as a basic space ' '
+    cleaned = "".join(
+        " " if unicodedata.category(char) == "Zs" else char
+        for char in normalized
+    )
+
+    return cleaned
+
+def validateDomainString(str_val):
+    # Overall domain length limit is 253 characters
+    if len(str_val) > 253:
+        return False
+
+    parts = str_val.split(".")
+    for p in parts:
+        if not validString(p, domain=True):
+            return False
+        # Each label (not just the TLD) must also round-trip through
+        # IDNA encoding. This catches malformed combining-character
+        # sequences and invalid RTL/LTR script mixing within a single
+        # label -- relevant for Arabic-script domains where mixing
+        # right-to-left and left-to-right characters in one label is
+        # invalid per the bidi rule.
+        if idnConversion(p) is None:
+            return False
+
+    tld_ascii = idnConversion(parts[-1])
+    if tld_ascii is None or not isTLD(tld_ascii.upper()):
+        return False
+
+    return True
+
+def is_valid_ipv4_pure(ip_str):
+    parts = ip_str.split('.')
+    if len(parts) != 4:
+        return False
+
+    for part in parts:
+        if not part.isdigit():
+            return False
+
+        val = int(part)
+        if val < 0 or val > 255:
+            return False
+
+        if len(part) > 1 and part[0] == '0':
+            return False
+
+    return True
+
+def is_valid_ipv6_pure(ip_str):
+    if ip_str.count('::') > 1:
+        return False
+
+    # Handle IPv4-mapped/compatible IPv6 addresses (e.g., ::ffff:192.168.1.1)
+    # If the last group contains a dot, pull it out and validate it as IPv4
+    groups = ip_str.split(':')
+    if '.' in groups[-1]:
+        ipv4_part = groups.pop() # Remove the IPv4 string
+        if not is_valid_ipv4_pure(ipv4_part):
+            return False
+        # An IPv4 address replaces 2 structural groups of IPv6 (32 bits total)
+        # We append a dummy valid hex string to preserve the count logic below
+        groups.append("0")
+        groups.append("0")
+        # Reconstruct the string without the IPv4 tail for normal processing
+        ip_str = ":".join(groups)
+
+    if '::' in ip_str:
+        parts = ip_str.split('::')
+        left = parts[0].split(':') if parts[0] else []
+        right = parts[1].split(':') if parts[1] else []
+
+        if len(left) + len(right) > 7:
+            return False
+
+        groups = left + ['0'] * (8 - (len(left) + len(right))) + right
+    else:
+        groups = ip_str.split(':')
+        if len(groups) != 8:
+            return False
+
+    for group in groups:
+        if not (1 <= len(group) <= 4):
+            return False
+
+        try:
+            val = int(group, 16)
+            if val < 0 or val > 0xFFFF:
+                return False
+        except ValueError:
+            return False
+
+    return True
+
+def validateDomainLiteral(domain_str):
+    if not (domain_str.startswith("[") and domain_str.endswith("]")):
+        return False
+
+    ip_content = domain_str[1:-1].strip()
+
+    if ip_content.lower().startswith("ipv6:"):
+        ipv6_candidate = ip_content[5:]
+        return is_valid_ipv6_pure(ipv6_candidate)
+
+    return is_valid_ipv4_pure(ip_content)
 
 def is_valid(email):
-    return "@" in email
+    if email is None:
+        return False
+
+    if not isinstance(email, str):
+        return False
+
+    # Strip plain ASCII/structural whitespace before anything else --
+    # a stray leading/trailing space shouldn't disqualify an otherwise
+    # valid address, and it needs to happen before the length check.
+    email = email.strip()
+
+    if not email:
+        return False
+
+    # *** ORDERING FIX ***
+    # Normalize BEFORE doing any structural checks (length, "@" count,
+    # etc). Previously normalization ran only on the local/domain split
+    # result, AFTER the raw "@" count check -- which meant a full-width
+    # "＠" (U+FF20) or small commercial-at "﹫" (U+FE6B) would make
+    # email.count("@") come back 0 and the address would be rejected
+    # before strict_clean_input() ever got a chance to fold it down to
+    # a normal "@". Normalizing first fixes that, and also folds
+    # full-width Latin/digits, Arabic presentation forms, and the
+    # various lookalike "full stop" characters consistently.
+    email = strict_clean_input(email)
+
+    # Reject invisible bidi-override / control characters anywhere in
+    # the address (see has_disallowed_control_chars docstring) --
+    # this is the Arabic/RTL-spoofing safety net.
+    if has_disallowed_control_chars(email):
+        return False
+
+    if len(email) > 254:
+        return False
+
+    if email.count("@") != 1:
+        return False
+
+    local, domain = email.split("@")
+
+    if len(local) == 0 or len(local) > 64 or len(domain) == 0:
+        return False
+
+    if not validString(local):
+        return False
+
+    if domain.startswith("["):
+        return validateDomainLiteral(domain)
+    else:
+        return validateDomainString(domain)
+
+# --- Test Cases ---
+if __name__ == "__main__":
+    print(is_valid("abc..def@comp.com"))               # False (Consecutive dots)
+    print(is_valid("a@" + "a"*64 + ".com"))             # False (Domain label > 63 chars)
+    print(is_valid("user@[IPv6:::ffff:192.168.1.1]"))   # True
+
+    # --- New edge-case tests ---
+
+    # Full-width "＠" (U+FF20) instead of ASCII "@" -- common in text
+    # typed on full-width/CJK input methods, also used in obfuscated
+    # spam scraping-evasion addresses.
+    print(is_valid("user＠example.com"))                # True
+
+    # Small/CJK-compat commercial-at "﹫" (U+FE6B)
+    print(is_valid("user\ufe6bexample.com"))            # True
+
+    # Legitimate Arabic (RTL) local part with a Latin domain
+    print(is_valid("مستخدم@example.com"))               # True
+
+    # Legitimate Arabic (RTL) domain, internationalized
+    print(is_valid("user@مثال.شبكة"))                   # depends on tld list / idna support
+
+    # Bidi-override spoofing attempt (RLO character hidden in the address)
+    print(is_valid("user\u202Egnp.exe@example.com"))    # False (rejected: bidi override char)
+
+    # Zero-width-joiner smuggled into the local part
+    print(is_valid("user\u200dname@example.com"))       # False (rejected: ZWJ is Cf)
+
+    # Leading/trailing whitespace should be tolerated
+    print(is_valid("  user@example.com  "))             # True
+
+    # Empty local part
+    print(is_valid("@example.com"))                      # False
