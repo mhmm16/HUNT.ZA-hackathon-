@@ -87,14 +87,6 @@ is_valid("user@[1.1.1.1]")          # True, public IP literal
 - Goes beyond basic syntax checking: it also validates against the real, current TLD list, supports IDN domains, supports RFC 5321 address literals, and rejects addresses that resolve to private network ranges, which is squarely in the spirit of Universal Acceptance testing.
 - `testing.py` documents why it differs from `hashmap.py` (sorting the bucket once at load time instead of on every call) directly in a code comment, which leaves a useful trail for code review.
 
-### Risks and items to verify before calling this complete
-- `main.py` is still unexplained. Confirm with the team whether it is safe to delete now that `testing.py` is the canonical validator, or whether it serves a separate purpose, such as an entry point that is meant to import from `testing.py`.
-- `draft_files/luan.py` was kept rather than deleted during the cleanup. Confirm whether it is purely historical or still needed for reference, and consider removing it once confirmed.
-- No automated test suite (such as `pytest`) exists. `testing.py`'s test cases only run via its `__main__` block, so there is no CI signal on regressions.
-- The TLD data sources have been partially consolidated, down from four files to two: `draft_files/tldnames.txt` and `draft_files/temp.txt`. Confirm whether `temp.txt` is still needed, or whether `tldnames.txt` is now the single source of truth.
-- The DNS-based private-network check (`has_rfc1918_dns`) makes live network calls. Decide whether that is the desired behaviour for all callers, or whether it should be optional or mockable for testing.
-- Confirm that every other script or import that referenced `tldnames.txt`, `tlds.txt`, or `tldnames.zip` by their old root-level paths has been updated for the new `draft_files/` location, or removed if those files were superseded.
-
 ---
 
 ## Universal Acceptance Findings
