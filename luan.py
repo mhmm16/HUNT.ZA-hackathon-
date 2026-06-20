@@ -1448,7 +1448,9 @@ tlds = tlds.split("\n")
 def isTLD(str_val):
     return str_val in tlds
 
-def validString(str_val, domain = False):
+def validString(str_val, domain = False, flag = False):
+    # print(flag)
+
     length = len(str_val)
     if length == 0:
         return False
@@ -1462,17 +1464,17 @@ def validString(str_val, domain = False):
         if length > 63:
             return False
         # Enforce RFC 1035: Domain labels cannot start or end with a hyphen
-        if str_val[0] == "-" or str_val[-1] == "-":
+        if str_val[0] == "-" or str_val[-1] == "-" and not flag:
             return False
 
     i = 0
     while i < length:
         letter = str_val[i]
 
-        if letter == "@":
+        if letter == "@" and not flag:
             return False
 
-        if (i == 0 or i == length-1) and letter == ".":
+        if (i == 0 or i == length-1) and letter == "." and not flag:
             return False
         
         allowed = ["!", "#", "$", "%", "&", "'", "*", "+", "-", "/", "=", "?", "^", "_", "`", "{", "|", "}", "~", "."] if not domain else ["-"]
@@ -1577,20 +1579,48 @@ def validateDomainLiteral(domain_str):
         
     return is_valid_ipv4_pure(ip_content)
 
+CUSTOM_STOPS = {
+    '\u3002': '.',  # Chinese Ideographic
+    '\uFF0E': '.',  # Full-width East Asian
+    '\uFE52': '.',  # Small Chinese
+    '\u16E6': '.',  # Nordic Runic 1
+    '\u16EB': '.',  # Nordic Runic 2
+    '\u16EC': '.',  # Nordic Runic 3
+    '\u0589': '.',  # Armenian
+    '\u0701': '.',  # Syriac
+    '\u2024': '.'   # One dot leader
+}
+
+# Malicious/weird structural spaces to completely strip out of the email
+STRIP_CHARACTERS = {
+    '\u200B',  # Zero Width Space
+    '\u200C',  # Zero Width Non-Joiner
+    '\u200D',  # Zero Width Joiner
+    '\uFEFF',  # Zero Width No-Break Space / BOM
+}
+
 def strict_clean_input(input_str):
     if not input_str:
         return ""
         
+        
     # NFKC normalizes wide characters, full-width formats, and accents into standard ASCII counterparts
     normalized = unicodedata.normalize('NFKC', input_str)
+
+    if '\uFF20' in normalized:
+        normalized = normalized.replace('\uFF20', '@')
     
     # Manual map for unique multi-lingual full stops that normalization misses
     custom_stops = {
-        '。': '.',  # CJK Ideographic
-        '։': '.',  # Armenian
-        '܂': '.',  # Syriac
-        '․': '.',  # One dot leader
-        'ᛖ': '.'   # Runic
+        '\u3002': '.',  # Chinese/CJK Ideographic
+        '\uFF0E': '.',  # Full-width East Asian
+        '\uFE52': '.',  # Small Chinese
+        '\u16E6': '.',  # Nordic Runic 1
+        '\u16EB': '.',  # Nordic Runic 2
+        '\u16EC': '.',  # Nordic Runic 3
+        '\u0589': '.',  # Armenian
+        '\u0701': '.',  # Syriac
+        '\u2024': '.'   # One dot leader
     }
     for special_stop, ascii_dot in custom_stops.items():
         normalized = normalized.replace(special_stop, ascii_dot)
@@ -1615,10 +1645,15 @@ def is_valid(email):
 
     local, domain = email.split("@")
 
+    flag = (local[0] == "\"" and local[-1] == "\"")
+    if flag:
+        local = local[1:]
+        local = local[:len(local)-1]
+
     if len(local) > 64 or len(domain) == 0:
         return False
 
-    if not validString(local):
+    if not validString(local, flag=flag):
         return False
 
     if domain.startswith("["):
@@ -1629,4 +1664,4 @@ def is_valid(email):
 # --- Test Cases ---
 print(is_valid("abc..def@comp.com"))               # False (Consecutive dots)
 print(is_valid("a@" + "a"*64 + ".com"))            # False (Domain label > 63 chars)
-print(is_valid("user@[IPv6:::ffff:192.168.1.1]"))  #
+print(is_valid("\"user\"@[IPv6:::ffff:192.168.1.1]"))  #
