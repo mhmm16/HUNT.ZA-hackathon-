@@ -53,7 +53,6 @@ def manual_binary_search(sorted_list, target):
     return -1  # Target not found
 
 # --- Implementation ---
-target_tld = ".com"
 
 if key:
     key.sort() # Remember to sort first!
@@ -65,3 +64,32 @@ if key:
         print(f"{target_tld} not found")
 
 
+#-- FINAL-FINAL -FINAL SUBMISSION 
+
+def validate(tld):
+    """
+    Takes a raw TLD string, finds the matching alphabet bucket in the hashmap,
+    sorts it, and returns True if the TLD is found using binary search.
+    """
+    # Guard against empty string inputs
+    if not tld:
+        return False
+        
+    # Get the uppercase first letter to find the matching bucket key
+    first_letter = tld[0].upper()
+    
+    # Check if the alphabet key exists in our hashmap
+    if first_letter in tld_map:
+        # Isolate the list bucket for this specific letter
+        bucket = tld_map[first_letter]
+        
+        # Binary search requires a sorted list
+        bucket.sort()
+        
+        # Execute your binary search function
+        index = manual_binary_search(bucket, tld)
+        
+        # Return True if found (index is not -1)
+        return index != -1
+        
+    return False
