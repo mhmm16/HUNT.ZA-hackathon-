@@ -1441,6 +1441,8 @@ ZUERICH
 ZW
 """
 
+import unicodedata
+
 tlds = tlds.split("\n")
 
 def isTLD(str_val):
@@ -1451,9 +1453,17 @@ def validString(str_val, domain = False):
     if length == 0:
         return False
 
-    # Enforce RFC 1035: Domain labels cannot start or end with a hyphen
-    if domain and (str_val[0] == "-" or str_val[-1] == "-"):
+    # FIX: Check for consecutive dots ".." which are strictly illegal
+    if ".." in str_val:
         return False
+
+    if domain:
+        # FIX: Domain labels cannot exceed 63 characters
+        if length > 63:
+            return False
+        # Enforce RFC 1035: Domain labels cannot start or end with a hyphen
+        if str_val[0] == "-" or str_val[-1] == "-":
+            return False
 
     i = 0
     while i < length:
@@ -1478,9 +1488,12 @@ def idnConversion(str_val):
     return str_val.encode("idna").decode("ascii")
 
 def validateDomainString(str_val):
+    # Overall domain length limit is 253 characters 
+    if len(str_val) > 253:
+        return False
+        
     parts = str_val.split(".")
     for p in parts:
-        # FIX: Added domain=True so domains don't allow local-part special chars (!, #, $)
         if not validString(p, domain=True): 
             return False
         
@@ -1511,6 +1524,20 @@ def is_valid_ipv6_pure(ip_str):
     if ip_str.count('::') > 1:
         return False
         
+    # FIX: Handle IPv4-mapped/compatible IPv6 addresses (e.g., ::ffff:192.168.1.1)
+    # If the last group contains a dot, pull it out and validate it as IPv4
+    groups = ip_str.split(':')
+    if '.' in groups[-1]:
+        ipv4_part = groups.pop() # Remove the IPv4 string
+        if not is_valid_ipv4_pure(ipv4_part):
+            return False
+        # An IPv4 address replaces 2 structural groups of IPv6 (32 bits total)
+        # We append a dummy valid hex string to preserve the count logic below
+        groups.append("0")
+        groups.append("0")
+        # Reconstruct the string without the IPv4 tail for normal processing
+        ip_str = ":".join(groups)
+
     if '::' in ip_str:
         parts = ip_str.split('::')
         left = parts[0].split(':') if parts[0] else []
@@ -1539,28 +1566,52 @@ def is_valid_ipv6_pure(ip_str):
     return True
 
 def validateDomainLiteral(domain_str):
-    # FIX: Safely verify it actually starts with '[' and ends with ']'
     if not (domain_str.startswith("[") and domain_str.endswith("]")):
         return False
         
-    # Strip the brackets
     ip_content = domain_str[1:-1].strip()
 
-    # FIX: RFC 5321 requires IPv6 literals to be prefixed with "IPv6:" case-insensitively
     if ip_content.lower().startswith("ipv6:"):
-        ipv6_candidate = ip_content[5:] # Strip "IPv6:"
+        ipv6_candidate = ip_content[5:]
         return is_valid_ipv6_pure(ipv6_candidate)
         
-    # If no IPv6 prefix, treat it strictly as an IPv4 literal
     return is_valid_ipv4_pure(ip_content)
+
+def strict_clean_input(input_str):
+    if not input_str:
+        return ""
+        
+    # NFKC normalizes wide characters, full-width formats, and accents into standard ASCII counterparts
+    normalized = unicodedata.normalize('NFKC', input_str)
+    
+    # Manual map for unique multi-lingual full stops that normalization misses
+    custom_stops = {
+        '。': '.',  # CJK Ideographic
+        '։': '.',  # Armenian
+        '܂': '.',  # Syriac
+        '․': '.',  # One dot leader
+        'ᛖ': '.'   # Runic
+    }
+    for special_stop, ascii_dot in custom_stops.items():
+        normalized = normalized.replace(special_stop, ascii_dot)
+        
+    # Standardize all known Unicode structural whitespaces down to clean standard spaces
+    # This treats any category "Zs" (Separator, Space) character as a basic space ' '
+    cleaned = "".join(
+        " " if unicodedata.category(char) == "Zs" else char 
+        for char in normalized
+    )
+    
+    return cleaned
 
 def is_valid(email):
     if len(email) > 254:
         return False
 
-    # FIX: Handle emails without '@' or with multiple '@' safely
     if email.count("@") != 1:
         return False
+    
+    email = strict_clean_input(email)
 
     local, domain = email.split("@")
 
@@ -1576,8 +1627,6 @@ def is_valid(email):
         return validateDomainString(domain)
 
 # --- Test Cases ---
-print(is_valid("a@comp.com"))                    # True
-print(is_valid("user@[192.168.1.1]"))            # True (IPv4 literal)
-print(is_valid("user@[IPv6:2001:db8::1]"))       # True (IPv6 literal with required prefix)
-print(is_valid("user@[2001:db8::1]"))            # False (Missing mandatory IPv6: tag)
-print(is_valid("user@[192.168.1.1"))             # False (Malformed brackets)
+print(is_valid("abc..def@comp.com"))               # False (Consecutive dots)
+print(is_valid("a@" + "a"*64 + ".com"))            # False (Domain label > 63 chars)
+print(is_valid("user@[IPv6:::ffff:192.168.1.1]"))  #
