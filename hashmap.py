@@ -4,7 +4,6 @@
 
 from collections import defaultdict
 
-# Use a defaultdict to easily group words under the same letter
 tld_map = defaultdict(list)
 
 key = None
@@ -14,22 +13,18 @@ with open('tldnames.txt', 'r', encoding='utf-8') as file:
     for line in file:
         line = line.strip()
         
-        # Skip empty lines, comments, or headers
+        
         if not line or line.startswith('#'):
             continue
-            
-        # Get the first letter as the key (uppercase)
         first_letter = line[0].upper()
         
-        # Add the domain name to that letter's list
         tld_map[first_letter].append(line)
 
-# Convert back to standard dictionary format
+
+
 tld_map = dict(tld_map)
 
-# Example output test
-print("A total of", len(tld_map['A']), "entries start with 'A'.")
-print("First 5 entries for 'A':", tld_map['A'][:5])
+
 
 def manual_binary_search(sorted_list, target):
     low = 0
@@ -64,7 +59,7 @@ if key:
         print(f"{target_tld} not found")
 
 
-#-- FINAL-FINAL -FINAL SUBMISSION 
+#-- FINAL-FINAL -FINAL SUBMISSION --FINAL SUB 
 
 def validate(tld):
     """
@@ -78,7 +73,6 @@ def validate(tld):
     # Get the uppercase first letter to find the matching bucket key
     first_letter = tld[0].upper()
     
-    # Check if the alphabet key exists in our hashmap
     if first_letter in tld_map:
         # Isolate the list bucket for this specific letter
         bucket = tld_map[first_letter]
